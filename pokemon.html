@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pokemon</title>
+    </head>
+    <body>
+        <h1>Get Pokemons!</h1>
+        <button id="btn" onclick="getdata()">Get!</button>
+        <div id="sebuahpokemon" class="pontainer"></div>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                margin: 0;
+            }
+
+            h1 {
+                padding: 25px;
+                margin: 15px;
+            }
+
+            .pontainer {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: space-between;
+                justify-content: center;
+                max-width: 100%;
+            }
+
+            .pokemon {
+                margin: 20px;
+                padding-bottom: 25px;
+                text-align: center;
+            }
+
+            .pokemon .img-container {
+                width: 120px;
+                height: 80px;
+                text-align: center;
+                padding-top: 10px;
+            }
+
+            img {
+                width: 5rem;
+                height: 5rem;
+            }
+            .pokemon .number {
+                margin: 25px 5px 5px 5px;
+                font-size: 15px;
+            }
+
+            .pokemon .type {
+                margin: 5px;
+                font-size: 15px;
+            }
+
+            button {
+                margin-bottom: 30px;
+                margin-left:40px;
+                width: 45px;
+                height: 20px;
+            }
+        </style>
+        <script> 
+            const sebuahpokemon = document.getElementById('sebuahpokemon');
+            const colors = {
+                bug: "#808080",
+                dragon: "#ffeaa7",
+                electric: "#fed330",
+                fairy: "#FF0069",
+                fighting: "#30336b",
+                fire: "#ffa300",
+                flying: "#81ecec",
+                grass: "#9ACD32",
+                ground: "#EFB549",
+                ghost: "#a55eea",
+                ice: "#74b9ff",
+                normal: "#f5f5db",
+                poison: "#CF9FFF",
+                psychic: "#a29bfe",
+                rock: "#2d3436",
+                water: "#1E90FF",
+            };
+            const main_types = Object.keys(colors);
+
+            const getdata = async () => {
+                for (let i = 1; i <= 30; i++) {
+                    await getPokemon(i);
+                }
+            };
+
+            const getPokemon = async id => {
+                const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
+                const res = await fetch(url);
+                const pokemon = await res.json();
+                displayPokemon(pokemon);
+            };
+
+            function displayPokemon(pokemon) {
+                const pokedex = document.createElement('div');
+                pokedex.classList.add('pokemon');
+
+                const type = pokemon.types[0].type.name;
+                const name = pokemon.name[0].toUpperCase() + pokemon.name.slice(1);
+                const color = colors[type];
+                const imgsrc = pokemon.sprites.other.dream_world.front_default; 
+                
+                pokedex.style.backgroundColor = color;
+
+                const pokeInnerHTML = `
+                    <p class="number">${pokemon.id}: ${name}</p>
+                    <div class="img-container">
+                        <img src="${imgsrc}" alt="${name}" />
+                    </div>
+                    <div class="info">
+                        <p class="type">type: ${type}</p>
+                    </div>
+                `;
+
+                pokedex.innerHTML = pokeInnerHTML;
+
+                sebuahpokemon.appendChild(pokedex);
+            }
+        </script>
+    </body>
+</html>
